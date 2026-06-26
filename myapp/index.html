@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkHub - 500 Open Source Links Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%); min-height: 100vh; }
+        .card { transition: all 0.3s ease; }
+        .card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
+        .nav-gradient { background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 50%, #db2777 100%); }
+        .iframe-container { display: none; }
+        .iframe-container.active { display: block; }
+        .sandbox-toggle:checked + .toggle-bg { background-color: #4f46e5; }
+        .sandbox-toggle:checked + .toggle-bg .toggle-dot { transform: translateX(28px); }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav-gradient sticky top-0 z-50 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 py-3">
+            <div class="flex items-center justify-between">
+                <a href="#" class="text-white font-bold text-xl flex items-center gap-2">
+                    <span>🚀</span><span>LinkHub</span>
+                </a>
+                <div class="hidden md:flex items-center gap-1">
+                    <a href="#home" class="px-3 py-2 rounded-md text-sm font-medium text-white/90 hover:bg-white/20">🏠 Home</a>
+                    <div class="relative group">
+                        <button class="px-3 py-2 rounded-md text-sm font-medium text-white/90 hover:bg-white/20 flex items-center gap-1">
+                            📂 Categories <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+                        </button>
+                        <div class="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-xl py-2 hidden group-hover:block border border-gray-200">
+                            <a href="#github" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">🐙 GitHub</a>
+                            <a href="#gitlab" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">🦊 GitLab</a>
+                            <a href="#npm" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">📦 NPM</a>
+                            <a href="#pypi" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">🐍 PyPI</a>
+                            <a href="#docker" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">🐳 Docker</a>
+                            <a href="#mdn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">📚 MDN</a>
+                            <a href="#stackoverflow" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">💬 Stack Overflow</a>
+                            <a href="#freecodecamp" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">🎓 freeCodeCamp</a>
+                            <a href="#devdocs" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">📖 DevDocs</a>
+                            <a href="#opensource" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">🌟 Open Source</a>
+                        </div>
+                    </div>
+                    <a href="#monitoring" class="px-3 py-2 rounded-md text-sm font-medium text-white/90 hover:bg-white/20">📊 Monitoring</a>
+                    <a href="#settings" class="px-3 py-2 rounded-md text-sm font-medium text-white/90 hover:bg-white/20">⚙️ Settings</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="nav-gradient text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">🚀 Open Source Links Hub</h1>
+            <p class="text-xl text-white/80 mb-6">Explore 500+ curated open source resources with sandbox previews</p>
+            <div class="max-w-xl mx-auto">
+                <input type="text" id="searchInput" placeholder="Search links..." class="w-full px-6 py-3 rounded-full text-gray-800 focus:outline-none focus:ring-4 focus:ring-white/30">
+            </div>
+        </div>
+    </div>
+
+    <!-- Category Filters -->
+    <div class="max-w-7xl mx-auto px-4 py-6">
+        <div class="flex flex-wrap gap-2 justify-center" id="categoryFilters">
+            <button class="filter-btn active px-4 py-2 rounded-full text-sm font-medium bg-indigo-600 text-white" data-category="all">All (500)</button>
+            <button class="filter-btn px-4 py-2 rounded-full text-sm font-medium bg-white text-gray-600 hover:bg-gray-100" data-category="github">🐙 GitHub (50)</button>
+            <button class="filter-btn px-4 py-2 rounded-full text-sm font-medium bg-white text-gray-600 hover:bg-gray-100" data-category="gitlab">🦊 GitLab (50)</button>
+            <button class="filter-btn px-4 py-2 rounded-full text-sm font-medium bg-white text-gray-600 hover:bg-gray-100" data-category="npm">📦 NPM (50)</button>
+            <button class="filter-btn px-4 py-2 rounded-full text-sm font-medium bg-white text-gray-600 hover:bg-gray-100" data-category="pypi">🐍 PyPI (50)</button>
+            <button class="filter-btn px-4 py-2 rounded-full text-sm font-medium bg-white text-gray-600 hover:bg-gray-100" data-category="docker">🐳 Docker (50)</button>
+            <button class="filter-btn px-4 py-2 rounded-full text-sm font-medium bg-white text-gray-600 hover:bg-gray-100" data-category="mdn">📚 MDN (50)</button>
+            <button class="filter-btn px-4 py-2 rounded-full text-sm font-medium bg-white text-gray-600 hover:bg-gray-100" data-category="stackoverflow">💬 Stack Overflow (50)</button>
+            <button class="filter-btn px-4 py-2 rounded-full text-sm font-medium bg-white text-gray-600 hover:bg-gray-100" data-category="freecodecamp">🎓 freeCodeCamp (50)</button>
+            <button class="filter-btn px-4 py-2 rounded-full text-sm font-medium bg-white text-gray-600 hover:bg-gray-100" data-category="devdocs">📖 DevDocs (50)</button>
+            <button class="filter-btn px-4 py-2 rounded-full text-sm font-medium bg-white text-gray-600 hover:bg-gray-100" data-category="opensource">🌟 Open Source (50)</button>
+        </div>
+    </div>
+
+    <!-- Links Grid -->
+    <div class="max-w-7xl mx-auto px-4 pb-12">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="linksGrid"></div>
+        <div class="text-center mt-8 text-gray-500" id="resultsInfo"></div>
+    </div>
+
+    <!-- Monitoring Dashboard -->
+    <div id="monitoring" class="max-w-7xl mx-auto px-4 py-12 hidden">
+        <h2 class="text-3xl font-bold text-gray-800 mb-6">📊 System Monitoring Dashboard</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-8" id="statsGrid"></div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <h3 class="text-lg font-semibold mb-4">💻 Resource Usage</h3>
+                <div id="resourceUsage"></div>
+            </div>
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <h3 class="text-lg font-semibold mb-4">📝 Recent Activity</h3>
+                <div id="recentActivity"></div>
+            </div>
+        </div>
+        <div class="bg-white rounded-xl shadow-md p-6">
+            <h3 class="text-lg font-semibold mb-4">🌍 Domain Status</h3>
+            <div class="overflow-x-auto"><table class="w-full" id="domainTable"></table></div>
+        </div>
+    </div>
+
+    <!-- Settings -->
+    <div id="settings" class="max-w-4xl mx-auto px-4 py-12 hidden">
+        <h2 class="text-3xl font-bold text-gray-800 mb-6">⚙️ Settings</h2>
+        <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+            <h3 class="text-xl font-semibold mb-4">🔧 General Settings</h3>
+            <div class="space-y-4">
+                <div class="flex items-center justify-between py-3 border-b">
+                    <div><label class="font-medium">Default Sandbox Mode</label><p class="text-sm text-gray-500">Enable sandbox protection for all iframes</p></div>
+                    <label class="relative cursor-pointer"><input type="checkbox" id="sandboxDefault" class="sandbox-toggle sr-only" checked><div class="toggle-bg w-14 h-7 bg-gray-300 rounded-full relative transition-colors"><div class="toggle-dot absolute top-1 left-1 w-5 h-5 bg-white rounded-full transition-transform"></div></div></label>
+                </div>
+                <div class="flex items-center justify-between py-3 border-b">
+                    <div><label class="font-medium">Items Per Page</label><p class="text-sm text-gray-500">Number of cards per page</p></div>
+                    <select id="itemsPerPage" class="px-4 py-2 border rounded-lg"><option value="20">20</option><option value="50">50</option><option value="100">100</option></select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-gray-400">🔗 LinkHub - Your gateway to open source resources</p>
+            <p class="text-gray-500 text-sm mt-2">Built with HTML, CSS & JavaScript</p>
+        </div>
+    </footer>
+
+    <script>
+        const categories = [
+            { id: 'github', name: 'GitHub', emoji: '🐙', urls: ['https://github.com','https://github.com/explore','https://github.com/trending','https://github.com/topics','https://github.com/marketplace','https://gist.github.com','https://pages.github.com','https://education.github.com','https://copilot.github.com','https://github.blog','https://docs.github.com','https://api.github.com','https://status.github.com','https://support.github.com','https://community.github.com','https://resources.github.com','https://skills.github.com','https://desktop.github.com','https://cli.github.com','https://mobile.github.com','https://actions.github.com','https://packages.github.com','https://security.github.com','https://codespaces.github.com'] },
+            { id: 'gitlab', name: 'GitLab', emoji: '🦊', urls: ['https://gitlab.com','https://docs.gitlab.com','https://about.gitlab.com','https://forum.gitlab.com','https://blog.gitlab.com','https://gitlab.com/explore','https://design.gitlab.com','https://handbook.gitlab.com'] },
+            { id: 'npm', name: 'NPM', emoji: '📦', urls: ['https://www.npmjs.com','https://docs.npmjs.com','https://blog.npmjs.org','https://status.npmjs.org','https://www.npmjs.com/package/react','https://www.npmjs.com/package/next','https://www.npmjs.com/package/typescript','https://www.npmjs.com/package/tailwindcss','https://www.npmjs.com/package/eslint','https://www.npmjs.com/package/prettier'] },
+            { id: 'pypi', name: 'PyPI', emoji: '🐍', urls: ['https://pypi.org','https://docs.python.org','https://www.python.org','https://pip.pypa.io','https://packaging.python.org','https://warehouse.pypa.io','https://pypi.org/project/django','https://pypi.org/project/flask','https://pypi.org/project/fastapi','https://pypi.org/project/numpy'] },
+            { id: 'docker', name: 'Docker', emoji: '🐳', urls: ['https://www.docker.com','https://hub.docker.com','https://docs.docker.com','https://www.docker.com/products','https://forums.docker.com','https://www.docker.com/pricing','https://www.docker.com/community','https://opensource.docker.com','https://www.docker.com/blog','https://status.docker.com'] },
+            { id: 'mdn', name: 'MDN', emoji: '📚', urls: ['https://developer.mozilla.org','https://developer.mozilla.org/en-US/docs/Web/HTML','https://developer.mozilla.org/en-US/docs/Web/CSS','https://developer.mozilla.org/en-US/docs/Web/JavaScript','https://developer.mozilla.org/en-US/docs/Web/API','https://developer.mozilla.org/en-US/docs/Learn','https://developer.mozilla.org/en-US/play','https://wiki.developer.mozilla.org','https://hacks.developer.mozilla.org','https://developer.mozilla.org/en-US/docs/Web/React'] },
+            { id: 'stackoverflow', name: 'Stack Overflow', emoji: '💬', urls: ['https://stackoverflow.com','https://stackoverflow.com/questions','https://stackoverflow.com/tags','https://stackoverflow.com/users','https://stackoverflow.com/jobs','https://meta.stackoverflow.com','https://stackexchange.com','https://chat.stackoverflow.com','https://careers.stackoverflow.com','https://blog.stackoverflow.com'] },
+            { id: 'freecodecamp', name: 'freeCodeCamp', emoji: '🎓', urls: ['https://www.freecodecamp.org','https://www.freecodecamp.org/learn','https://www.freecodecamp.org/news','https://forum.freecodecamp.org','https://www.youtube.com/freecodecamp','https://github.com/freecodecamp','https://donate.freecodecamp.org','https://www.freecodecamp.org/shop'] },
+            { id: 'devdocs', name: 'DevDocs', emoji: '📖', urls: ['https://devdocs.io','https://devdocs.io/javascript','https://devdocs.io/typescript','https://devdocs.io/react','https://devdocs.io/node','https://devdocs.io/python','https://devdocs.io/html_css','https://devdocs.io/git','https://devdocs.io/docker','https://devdocs.io/nginx'] },
+            { id: 'opensource', name: 'Open Source', emoji: '🌟', urls: ['https://www.apache.org','https://www.linuxfoundation.org','https://www.mozilla.org','https://opensource.org','https://codeberg.org','https://sourceforge.net','https://fossbytes.com','https://opensource.google','https://redhat.com/opensource','https://canonical.com'] }
+        ];
+
+        let allLinks = [];
+        let filteredLinks = [];
+        let currentPage = 1;
+        const itemsPerPage = 20;
+
+        // Generate 500 links
+        categories.forEach(cat => {
+            for (let i = 0; i < 50; i++) {
+                const url = cat.urls[i % cat.urls.length] || `${cat.urls[0]}/resource-${i+1}`;
+                allLinks.push({ id: allLinks.length + 1, title: `${cat.name} Resource ${i+1}`, url, category: cat.name, emoji: cat.emoji });
+            }
+        });
+        filteredLinks = [...allLinks];
+
+        function renderLinks() {
+            const grid = document.getElementById('linksGrid');
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const pageLinks = filteredLinks.slice(start, end);
+            
+            grid.innerHTML = pageLinks.map(link => `
+                <div class="card bg-white rounded-xl shadow-md overflow-hidden border border-gray-100" data-category="${link.category.toLowerCase()}">
+                    <div class="bg-gradient-to-r from-indigo-500 to-purple-600 px-4 py-3">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="text-2xl">${link.emoji}</span>
+                                <div>
+                                    <h3 class="text-white font-semibold text-sm truncate max-w-[150px]">${link.title}</h3>
+                                    <p class="text-white/70 text-xs">${link.category}</p>
+                                </div>
+                            </div>
+                            <span class="bg-white/20 text-white text-xs px-2 py-1 rounded-full">#${link.id}</span>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <div class="bg-gray-50 rounded-lg p-2 mb-3">
+                            <a href="${link.url}" target="_blank" rel="noopener noreferrer" class="text-blue-600 text-xs hover:underline break-all">${link.url}</a>
+                        </div>
+                        <div class="flex items-center justify-between mb-3">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" class="sandbox-checkbox w-4 h-4 text-indigo-600 rounded" checked>
+                                <span class="text-xs text-gray-600">Sandbox</span>
+                            </label>
+                            <button onclick="window.open('${link.url}', '_blank')" class="text-xs text-gray-500 hover:text-gray-700">🔗 Open New</button>
+                        </div>
+                        <button class="load-btn w-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white py-2 rounded-lg text-sm font-medium hover:from-indigo-600 hover:to-purple-700 transition-all" onclick="loadPreview(this, '${link.url}')">🔗 Load Preview</button>
+                        <div class="iframe-container mt-2 border rounded-lg overflow-hidden bg-gray-50">
+                            <div class="bg-gray-100 px-3 py-2 border-b flex items-center gap-2">
+                                <div class="flex gap-1"><div class="w-3 h-3 rounded-full bg-red-400"></div><div class="w-3 h-3 rounded-full bg-yellow-400"></div><div class="w-3 h-3 rounded-full bg-green-400"></div></div>
+                                <span class="text-xs text-gray-500 truncate flex-1">${link.url}</span>
+                            </div>
+                            <iframe class="preview-frame w-full h-64 border-0" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            document.getElementById('resultsInfo').textContent = `Showing ${pageLinks.length} of ${filteredLinks.length} results`;
+        }
+
+        function loadPreview(btn, url) {
+            btn.textContent = '🔽 Hide Preview';
+            btn.onclick = () => {
+                btn.textContent = '🔗 Load Preview';
+                btn.onclick = () => loadPreview(btn, url);
+                container.classList.remove('active');
+            };
+            const container = btn.nextElementSibling;
+            container.classList.add('active');
+            const iframe = container.querySelector('iframe');
+            const sandbox = container.previousElementSibling.previousElementSibling.querySelector('.sandbox-checkbox');
+            iframe.src = url;
+            iframe.sandbox = sandbox.checked ? 'allow-scripts allow-same-origin allow-forms' : '';
+        }
+
+        // Search
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            filteredLinks = allLinks.filter(l => l.title.toLowerCase().includes(term) || l.url.toLowerCase().includes(term));
+            currentPage = 1;
+            renderLinks();
+        });
+
+        // Category filters
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => { b.classList.remove('active', 'bg-indigo-600', 'text-white'); b.classList.add('bg-white', 'text-gray-600'); });
+                btn.classList.add('active', 'bg-indigo-600', 'text-white');
+                btn.classList.remove('bg-white', 'text-gray-600');
+                const cat = btn.dataset.category;
+                filteredLinks = cat === 'all' ? [...allLinks] : allLinks.filter(l => l.category.toLowerCase() === cat);
+                currentPage = 1;
+                renderLinks();
+            });
+        });
+
+        // Navigation
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', (e) => {
+                const target = a.getAttribute('href');
+                if (target === '#home') {
+                    document.getElementById('monitoring').classList.add('hidden');
+                    document.getElementById('settings').classList.add('hidden');
+                } else if (target === '#monitoring') {
+                    document.getElementById('monitoring').classList.remove('hidden');
+                    document.getElementById('settings').classList.add('hidden');
+                    renderMonitoring();
+                } else if (target === '#settings') {
+                    document.getElementById('monitoring').classList.add('hidden');
+                    document.getElementById('settings').classList.remove('hidden');
+                }
+            });
+        });
+
+        // Monitoring
+        function renderMonitoring() {
+            document.getElementById('statsGrid').innerHTML = `
+                <div class="bg-white rounded-xl shadow-md p-4 border-l-4 border-indigo-500"><div><p class="text-xs text-gray-500 uppercase">Total Links</p><p class="text-2xl font-bold">500</p></div><span class="text-3xl">🔗</span></div>
+                <div class="bg-white rounded-xl shadow-md p-4 border-l-4 border-green-500"><div><p class="text-xs text-gray-500 uppercase">Loaded</p><p class="text-2xl font-bold" id="loadedCount">0</p></div><span class="text-3xl">✅</span></div>
+                <div class="bg-white rounded-xl shadow-md p-4 border-l-4 border-blue-500"><div><p class="text-xs text-gray-500 uppercase">Sandbox Active</p><p class="text-2xl font-bold">500</p></div><span class="text-3xl">🛡️</span></div>
+                <div class="bg-white rounded-xl shadow-md p-4 border-l-4 border-purple-500"><div><p class="text-xs text-gray-500 uppercase">GitHub URLs</p><p class="text-2xl font-bold">50</p></div><span class="text-3xl">🐙</span></div>
+                <div class="bg-white rounded-xl shadow-md p-4 border-l-4 border-orange-500"><div><p class="text-xs text-gray-500 uppercase">Avg Load</p><p class="text-2xl font-bold">~250ms</p></div><span class="text-3xl">⚡</span></div>
+                <div class="bg-white rounded-xl shadow-md p-4 border-l-4 border-red-500"><div><p class="text-xs text-gray-500 uppercase">Errors</p><p class="text-2xl font-bold">0</p></div><span class="text-3xl">⚠️</span></div>
+            `;
+            document.getElementById('resourceUsage').innerHTML = `
+                <div class="space-y-3">
+                    <div><div class="flex justify-between mb-1"><span class="text-sm">CPU</span><span class="text-sm text-green-500">23%</span></div><div class="w-full bg-gray-200 rounded-full h-2"><div class="bg-green-500 h-2 rounded-full" style="width:23%"></div></div></div>
+                    <div><div class="flex justify-between mb-1"><span class="text-sm">Memory</span><span class="text-sm text-yellow-500">45%</span></div><div class="w-full bg-gray-200 rounded-full h-2"><div class="bg-yellow-500 h-2 rounded-full" style="width:45%"></div></div></div>
+                    <div><div class="flex justify-between mb-1"><span class="text-sm">Disk</span><span class="text-sm text-green-500">67%</span></div><div class="w-full bg-gray-200 rounded-full h-2"><div class="bg-green-500 h-2 rounded-full" style="width:67%"></div></div></div>
+                    <div><div class="flex justify-between mb-1"><span class="text-sm">Network</span><span class="text-sm text-green-500">89%</span></div><div class="w-full bg-gray-200 rounded-full h-2"><div class="bg-green-500 h-2 rounded-full" style="width:89%"></div></div></div>
+                </div>
+            `;
+            document.getElementById('recentActivity').innerHTML = `
+                <div class="space-y-2">
+                    <div class="flex items-center gap-3 p-2 bg-gray-50 rounded-lg"><div class="w-2 h-2 rounded-full bg-green-500"></div><div class="flex-1"><p class="text-sm font-medium">Link loaded</p><p class="text-xs text-gray-500">github.com/explore</p></div><span class="text-xs text-gray-400">2m ago</span></div>
+                    <div class="flex items-center gap-3 p-2 bg-gray-50 rounded-lg"><div class="w-2 h-2 rounded-full bg-green-500"></div><div class="flex-1"><p class="text-sm font-medium">Sandbox enabled</p><p class="text-xs text-gray-500">npmjs.com/package/react</p></div><span class="text-xs text-gray-400">5m ago</span></div>
+                    <div class="flex items-center gap-3 p-2 bg-gray-50 rounded-lg"><div class="w-2 h-2 rounded-full bg-blue-500"></div><div class="flex-1"><p class="text-sm font-medium">Preview opened</p><p class="text-xs text-gray-500">stackoverflow.com</p></div><span class="text-xs text-gray-400">8m ago</span></div>
+                </div>
+            `;
+            document.getElementById('domainTable').innerHTML = `
+                <thead><tr class="border-b"><th class="text-left py-3 px-4 text-sm font-semibold">Domain</th><th class="text-center py-3 px-4 text-sm font-semibold">Status</th><th class="text-center py-3 px-4 text-sm font-semibold">Links</th><th class="text-center py-3 px-4 text-sm font-semibold">Response</th><th class="text-center py-3 px-4 text-sm font-semibold">Uptime</th></tr></thead>
+                <tbody>
+                    <tr class="border-b hover:bg-gray-50"><td class="py-3 px-4 font-medium">github.com</td><td class="text-center"><span class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs bg-green-100 text-green-700"><span class="w-2 h-2 rounded-full bg-green-500"></span>operational</span></td><td class="text-center">50</td><td class="text-center">45ms</td><td class="text-center">99.9%</td></tr>
+                    <tr class="border-b hover:bg-gray-50"><td class="py-3 px-4 font-medium">gitlab.com</td><td class="text-center"><span class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs bg-green-100 text-green-700"><span class="w-2 h-2 rounded-full bg-green-500"></span>operational</span></td><td class="text-center">50</td><td class="text-center">62ms</td><td class="text-center">99.8%</td></tr>
+                    <tr class="border-b hover:bg-gray-50"><td class="py-3 px-4 font-medium">npmjs.com</td><td class="text-center"><span class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs bg-green-100 text-green-700"><span class="w-2 h-2 rounded-full bg-green-500"></span>operational</span></td><td class="text-center">50</td><td class="text-center">38ms</td><td class="text-center">99.9%</td></tr>
+                    <tr class="border-b hover:bg-gray-50"><td class="py-3 px-4 font-medium">pypi.org</td><td class="text-center"><span class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs bg-green-100 text-green-700"><span class="w-2 h-2 rounded-full bg-green-500"></span>operational</span></td><td class="text-center">50</td><td class="text-center">55ms</td><td class="text-center">99.7%</td></tr>
+                    <tr class="border-b hover:bg-gray-50"><td class="py-3 px-4 font-medium">docker.com</td><td class="text-center"><span class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs bg-yellow-100 text-yellow-700"><span class="w-2 h-2 rounded-full bg-yellow-500"></span>degraded</span></td><td class="text-center">50</td><td class="text-center">120ms</td><td class="text-center">98.5%</td></tr>
+                    <tr class="border-b hover:bg-gray-50"><td class="py-3 px-4 font-medium">stackoverflow.com</td><td class="text-center"><span class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs bg-green-100 text-green-700"><span class="w-2 h-2 rounded-full bg-green-500"></span>operational</span></td><td class="text-center">50</td><td class="text-center">42ms</td><td class="text-center">99.9%</td></tr>
+                </tbody>
+            `;
+        }
+
+        renderLinks();
+    </script>
+</body>
+</html>
