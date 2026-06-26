@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>500 Link Sandbox - Open Source Resources</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .search-box {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 25px;
+            width: 300px;
+            font-size: 16px;
+            outline: none;
+        }
+        
+        .filter-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            background: white;
+            color: #667eea;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .filter-btn:hover, .filter-btn.active {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .global-controls {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .global-controls label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        
+        .link-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+        
+        .link-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-title {
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .sandbox-controls {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .sandbox-btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+        
+        .btn-load {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .btn-new-tab {
+            background: #2196F3;
+            color: white;
+        }
+        
+        .btn-toggle-sandbox {
+            background: #FF9800;
+            color: white;
+        }
+        
+        .sandbox-frame {
+            width: 100%;
+            height: 200px;
+            border: none;
+            background: #f5f5f5;
+        }
+        
+        .card-footer {
+            padding: 15px;
+            background: #f9f9f9;
+        }
+        
+        .url-display {
+            font-size: 12px;
+            color: #666;
+            word-break: break-all;
+            margin-bottom: 10px;
+            padding: 8px;
+            background: #eee;
+            border-radius: 5px;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        
+        .status-loaded {
+            background: #4CAF50;
+        }
+        
+        .status-not-loaded {
+            background: #f44336;
+        }
+        
+        .stats {
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .category-tag {
+            display: inline-block;
+            padding: 3px 10px;
+            background: #667eea;
+            color: white;
+            border-radius: 15px;
+            font-size: 11px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔒 500 Link Sandbox Controller</h1>
+            <p>Kontrol aman untuk 500 link open source dengan sandbox protection</p>
+        </header>
+        
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number" id="totalLinks">500</div>
+                <div class="stat-label">Total Links</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="loadedLinks">0</div>
+                <div class="stat-label">Loaded</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="sandboxEnabled">500</div>
+                <div class="stat-label">Sandbox Active</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="githubLinks">0</div>
+                <div class="stat-label">GitHub URLs</div>
+            </div>
+        </div>
+        
+        <div class="global-controls">
+            <label>
+                <input type="checkbox" id="globalSandbox" checked>
+                Enable Sandbox Security (All Links)
+            </label>
+            <label>
+                <input type="checkbox" id="globalAllowScripts">
+                Allow Scripts (Reduced Security)
+            </label>
+            <label>
+                <input type="checkbox" id="globalAllowSameOrigin">
+                Allow Same Origin
+            </label>
+            <button class="filter-btn" onclick="loadAll()">Load All</button>
+            <button class="filter-btn" onclick="unloadAll()">Unload All</button>
+            <button class="filter-btn" onclick="toggleAllSandbox()">Toggle All Sandbox</button>
+        </div>
+        
+        <div class="controls">
+            <input type="text" class="search-box" id="searchBox" placeholder="Cari URL atau nama..." onkeyup="filterLinks()">
+            <button class="filter-btn active" onclick="filterCategory('all')">All</button>
+            <button class="filter-btn" onclick="filterCategory('github')">GitHub</button>
+            <button class="filter-btn" onclick="filterCategory('code')">Code Repos</button>
+            <button class="filter-btn" onclick="filterCategory('docs')">Documentation</button>
+            <button class="filter-btn" onclick="filterCategory('tools')">Tools</button>
+            <button class="filter-btn" onclick="filterCategory('cdn')">CDN/Library</button>
+        </div>
+        
+        <div class="grid" id="linkGrid"></div>
+    </div>
+
+    <script>
+        // Daftar URL open source termasuk GitHub dan sub-domain
+        const baseUrls = [
+            // GitHub dan sub-domain
+            { url: 'https://github.com', category: 'github', name: 'GitHub Main' },
+            { url: 'https://gist.github.com', category: 'github', name: 'GitHub Gist' },
+            { url: 'https://raw.githubusercontent.com', category: 'github', name: 'GitHub Raw' },
+            { url: 'https://pages.github.com', category: 'github', name: 'GitHub Pages' },
+            { url: 'https://docs.github.com', category: 'github', name: 'GitHub Docs' },
+            { url: 'https://api.github.com', category: 'github', name: 'GitHub API' },
+            { url: 'https://status.github.com', category: 'github', name: 'GitHub Status' },
+            { url: 'https://education.github.com', category: 'github', name: 'GitHub Education' },
+            { url: 'https://copilot.github.com', category: 'github', name: 'GitHub Copilot' },
+            { url: 'https://actions.github.com', category: 'github', name: 'GitHub Actions' },
+            
+            // Platform Code Repository
+            { url: 'https://gitlab.com', category: 'code', name: 'GitLab' },
+            { url: 'https://bitbucket.org', category: 'code', name: 'Bitbucket' },
+            { url: 'https://sourceforge.net', category: 'code', name: 'SourceForge' },
+            { url: 'https://codeberg.org', category: 'code', name: 'Codeberg' },
+            { url: 'https://notabug.org', category: 'code', name: 'NotABug' },
+            { url: 'https://pagure.io', category: 'code', name: 'Pagure' },
+            { url: 'https://gitea.com', category: 'code', name: 'Gitea' },
+            { url: 'https://forgejo.org', category: 'code', name: 'Forgejo' },
+            
+            // Documentation & Learning
+            { url: 'https://stackoverflow.com', category: 'docs', name: 'Stack Overflow' },
+            { url: 'https://developer.mozilla.org', category: 'docs', name: 'MDN Web Docs' },
+            { url: 'https://devdocs.io', category: 'docs', name: 'DevDocs' },
+            { url: 'https://freecodecamp.org', category: 'docs', name: 'freeCodeCamp' },
+            { url: 'https://codecademy.com', category: 'docs', name: 'Codecademy' },
+            { url: 'https://khanacademy.org', category: 'docs', name: 'Khan Academy' },
+            { url: 'https://coursera.org', category: 'docs', name: 'Coursera' },
+            { url: 'https://edx.org', category: 'docs', name: 'edX' },
+            { url: 'https://udemy.com', category: 'docs', name: 'Udemy' },
+            { url: 'https://pluralsight.com', category: 'docs', name: 'Pluralsight' },
+            
+            // Development Tools
+            { url: 'https://codepen.io', category: 'tools', name: 'CodePen' },
+            { url: 'https://jsfiddle.net', category: 'tools', name: 'JSFiddle' },
+            { url: 'https://codesandbox.io', category: 'tools', name: 'CodeSandbox' },
+            { url: 'https://replit.com', category: 'tools', name: 'Replit' },
+            { url: 'https://glitch.com', category: 'tools', name: 'Glitch' },
+            { url: 'https://stackblitz.com', category: 'tools', name: 'StackBlitz' },
+            { url: 'https://jsbin.com', category: 'tools', name: 'JS Bin' },
+            { url: 'https://regex101.com', category: 'tools', name: 'Regex101' },
+            { url: 'https://caniuse.com', category: 'tools', name: 'Can I Use' },
+            { url: 'https://npmjs.com', category: 'tools', name: 'npm' },
+            
+            // CDN & Libraries
+            { url: 'https://cdnjs.com', category: 'cdn', name: 'cdnjs' },
+            { url: 'https://unpkg.com', category: 'cdn', name: 'unpkg' },
+            { url: 'https://jsdelivr.com', category: 'cdn', name: 'jsDelivr' },
+            { url: 'https://cdn.jsdelivr.net', category: 'cdn', name: 'jsDelivr CDN' },
+            { url: 'https://yarnpkg.com', category: 'cdn', name: 'Yarn' },
+            { url: 'https://bundlephobia.com', category: 'cdn', name: 'BundlePhobia' },
+            { url: 'https://libraries.io', category: 'cdn', name: 'Libraries.io' },
+            
+            // More Open Source Platforms
+            { url: 'https://opensource.org', category: 'code', name: 'Open Source Initiative' },
+            { url: 'https://apache.org', category: 'code', name: 'Apache Foundation' },
+            { url: 'https://eclipse.org', category: 'code', name: 'Eclipse Foundation' },
+            { url: 'https://linuxfoundation.org', category: 'code', name: 'Linux Foundation' },
+            { url: 'https://mozilla.org', category: 'code', name: 'Mozilla' },
+            { url: 'https://wikimedia.org', category: 'code', name: 'Wikimedia' },
+            { url: 'https://archive.org', category: 'docs', name: 'Internet Archive' },
+            { url: 'https://wikipedia.org', category: 'docs', name: 'Wikipedia' },
+            { url: 'https://medium.com', category: 'docs', name: 'Medium' },
+            { url: 'https://dev.to', category: 'docs', name: 'DEV Community' },
+            
+            // Package Managers & Registries
+            { url: 'https://pypi.org', category: 'cdn', name: 'PyPI' },
+            { url: 'https://rubygems.org', category: 'cdn', name: 'RubyGems' },
+            { url: 'https://packagist.org', category: 'cdn', name: 'Packagist' },
+            { url: 'https://crates.io', category: 'cdn', name: 'Crates.io' },
+            { url: 'https://nuget.org', category: 'cdn', name: 'NuGet' },
+            { url: 'https://maven.org', category: 'cdn', name: 'Maven' },
+            { url: 'https://gradle.org', category: 'cdn', name: 'Gradle' },
+            
+            // CI/CD & DevOps
+            { url: 'https://travis-ci.com', category: 'tools', name: 'Travis CI' },
+            { url: 'https://circleci.com', category: 'tools', name: 'CircleCI' },
+            { url: 'https://jenkins.io', category: 'tools', name: 'Jenkins' },
+            { url: 'https://drone.io', category: 'tools', name: 'Drone' },
+            { url: 'https://wercker.com', category: 'tools', name: 'Wercker' },
+            { url: 'https://buildkite.com', category: 'tools', name: 'Buildkite' },
+            
+            // Cloud & Hosting
+            { url: 'https://heroku.com', category: 'tools', name: 'Heroku' },
+            { url: 'https://netlify.com', category: 'tools', name: 'Netlify' },
+            { url: 'https://vercel.com', category: 'tools', name: 'Vercel' },
+            { url: 'https://render.com', category: 'tools', name: 'Render' },
+            { url: 'https://railway.app', category: 'tools', name: 'Railway' },
+            { url: 'https://fly.io', category: 'tools', name: 'Fly.io' },
+            
+            // Testing & Quality
+            { url: 'https://sonarqube.org', category: 'tools', name: 'SonarQube' },
+            { url: 'https://codecov.io', category: 'tools', name: 'Codecov' },
+            { url: 'https://coveralls.io', category: 'tools', name: 'Coveralls' },
+            { url: 'https://lighthouse-ci.com', category: 'tools', name: 'Lighthouse' },
+            
+            // Design & Assets
+            { url: 'https://figma.com', category: 'tools', name: 'Figma' },
+            { url: 'https://unsplash.com', category: 'cdn', name: 'Unsplash' },
+            { url: 'https://pexels.com', category: 'cdn', name: 'Pexels' },
+            { url: 'https://pixabay.com', category: 'cdn', name: 'Pixabay' },
+            { url: 'https://fontawesome.com', category: 'cdn', name: 'Font Awesome' },
+            { url: 'https://fonts.google.com', category: 'cdn', name: 'Google Fonts' },
+            
+            // APIs & Services
+            { url: 'https://postman.com', category: 'tools', name: 'Postman' },
+            { url: 'https://insomnia.rest', category: 'tools', name: 'Insomnia' },
+            { url: 'https://httpie.io', category: 'tools', name: 'HTTPie' },
+            { url: 'https://reqres.in', category: 'tools', name: 'ReqRes' },
+            { url: 'https://jsonplaceholder.typicode.com', category: 'tools', name: 'JSON Placeholder' },
+            
+            // Monitoring & Analytics
+            { url: 'https://sentry.io', category: 'tools', name: 'Sentry' },
+            { url: 'https://newrelic.com', category: 'tools', name: 'New Relic' },
+            { url: 'https://datadog.com', category: 'tools', name: 'Datadog' },
+            { url: 'https://logrocket.com', category: 'tools', name: 'LogRocket' },
+            
+            // Communication
+            { url: 'https://discord.com', category: 'tools', name: 'Discord' },
+            { url: 'https://slack.com', category: 'tools', name: 'Slack' },
+            { url: 'https://matrix.org', category: 'tools', name: 'Matrix' },
+            { url: 'https://zulip.com', category: 'tools', name: 'Zulip' },
+            
+            // More GitHub related subdomains and variations
+            { url: 'https://github.blog', category: 'github', name: 'GitHub Blog' },
+            { url: 'https://resources.github.com', category: 'github', name: 'GitHub Resources' },
+            { url: 'https://skills.github.com', category: 'github', name: 'GitHub Skills' },
+            { url: 'https://cli.github.com', category: 'github', name: 'GitHub CLI' },
+            { url: 'https://desktop.github.com', category: 'github', name: 'GitHub Desktop' },
+            { url: 'https://mobile.github.com', category: 'github', name: 'GitHub Mobile' },
+            { url: 'https://support.github.com', category: 'github', name: 'GitHub Support' },
+            { url: 'https://community.github.com', category: 'github', name: 'GitHub Community' },
+            { url: 'https://partner.github.com', category: 'github', name: 'GitHub Partners' },
+            { url: 'https://enterprise.github.com', category: 'github', name: 'GitHub Enterprise' }
+        ];
+
+        // Generate 500 links dari base URLs
+        const links = [];
+        for (let i = 0; i < 500; i++) {
+            const baseIndex = i % baseUrls.length;
+            const variation = Math.floor(i / baseUrls.length);
+            const baseUrl = baseUrls[baseIndex];
+            
+            let url = baseUrl.url;
+            let name = baseUrl.name;
+            
+            // Add variation to URL if exists
+            if (variation > 0) {
+                if (baseUrl.url.includes('github.com')) {
+                    url = `${baseUrl.url}/search?q=project${variation}`;
+                    name = `${baseUrl.name} - Search ${variation}`;
+                } else if (baseUrl.url.includes('gitlab.com')) {
+                    url = `${baseUrl.url}/explore/projects/${variation}`;
+                    name = `${baseUrl.name} - Project ${variation}`;
+                } else {
+                    url = `${baseUrl.url}?page=${variation + 1}`;
+                    name = `${baseUrl.name} - Page ${variation + 1}`;
+                }
+            }
+            
+            links.push({
+                id: i + 1,
+                url: url,
+                name: name,
+                category: baseUrl.category,
+                loaded: false,
+                sandboxEnabled: true
+            });
+        }
+
+        let currentFilter = 'all';
+
+        function getSandboxAttributes(sandboxEnabled, allowScripts, allowSameOrigin) {
+            if (!sandboxEnabled) return '';
+            
+            let attrs = 'allow-forms allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-top-navigation-by-user-activation';
+            if (allowScripts) attrs += ' allow-scripts';
+            if (allowSameOrigin) attrs += ' allow-same-origin';
+            
+            return attrs;
+        }
+
+        function createLinkCard(link) {
+            const globalSandbox = document.getElementById('globalSandbox').checked;
+            const allowScripts = document.getElementById('globalAllowScripts').checked;
+            const allowSameOrigin = document.getElementById('globalAllowSameOrigin').checked;
+            
+            link.sandboxEnabled = globalSandbox;
+            
+            const sandboxAttrs = getSandboxAttributes(link.sandboxEnabled, allowScripts, allowSameOrigin);
+            
+            return `
+                <div class="link-card" data-id="${link.id}" data-category="${link.category}" data-url="${link.url.toLowerCase()}">
+                    <div class="card-header">
+                        <span class="card-title">#${link.id} - ${link.name}</span>
+                        <div class="sandbox-controls">
+                            <button class="sandbox-btn btn-load" onclick="loadLink(${link.id})">Load</button>
+                            <button class="sandbox-btn btn-new-tab" onclick="openNewTab(${link.id})">New Tab</button>
+                            <button class="sandbox-btn btn-toggle-sandbox" onclick="toggleSandbox(${link.id})">${link.sandboxEnabled ? '🔒' : '🔓'}</button>
+                        </div>
+                    </div>
+                    <iframe class="sandbox-frame" id="frame-${link.id}" src="" sandbox="${sandboxAttrs}" title="${link.name}"></iframe>
+                    <div class="card-footer">
+                        <div class="url-display">
+                            <span class="status-indicator ${link.loaded ? 'status-loaded' : 'status-not-loaded'}"></span>
+                            ${link.url}
+                        </div>
+                        <span class="category-tag">${link.category.toUpperCase()}</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderLinks(filterLinksArray = links) {
+            const grid = document.getElementById('linkGrid');
+            grid.innerHTML = filterLinksArray.map(link => createLinkCard(link)).join('');
+            updateStats();
+        }
+
+        function loadLink(id) {
+            const link = links.find(l => l.id === id);
+            if (link) {
+                const frame = document.getElementById(`frame-${id}`);
+                const globalSandbox = document.getElementById('globalSandbox').checked;
+                const allowScripts = document.getElementById('globalAllowScripts').checked;
+                const allowSameOrigin = document.getElementById('globalAllowSameOrigin').checked;
+                
+                const sandboxAttrs = getSandboxAttributes(link.sandboxEnabled, allowScripts, allowSameOrigin);
+                frame.setAttribute('sandbox', sandboxAttrs);
+                frame.src = link.url;
+                link.loaded = true;
+                
+                updateCardStatus(id);
+                updateStats();
+            }
+        }
+
+        function unloadLink(id) {
+            const link = links.find(l => l.id === id);
+            if (link) {
+                const frame = document.getElementById(`frame-${id}`);
+                frame.src = '';
+                link.loaded = false;
+                updateCardStatus(id);
+                updateStats();
+            }
+        }
+
+        function openNewTab(id) {
+            const link = links.find(l => l.id === id);
+            if (link) {
+                window.open(link.url, '_blank');
+            }
+        }
+
+        function toggleSandbox(id) {
+            const link = links.find(l => l.id === id);
+            if (link) {
+                link.sandboxEnabled = !link.sandboxEnabled;
+                const frame = document.getElementById(`frame-${id}`);
+                const allowScripts = document.getElementById('globalAllowScripts').checked;
+                const allowSameOrigin = document.getElementById('globalAllowSameOrigin').checked;
+                
+                const sandboxAttrs = getSandboxAttributes(link.sandboxEnabled, allowScripts, allowSameOrigin);
+                frame.setAttribute('sandbox', sandboxAttrs);
+                
+                renderLinks(getFilteredLinks());
+            }
+        }
+
+        function updateCardStatus(id) {
+            const card = document.querySelector(`[data-id="${id}"]`);
+            if (card) {
+                const indicator = card.querySelector('.status-indicator');
+                const link = links.find(l => l.id === id);
+                if (link) {
+                    indicator.className = `status-indicator ${link.loaded ? 'status-loaded' : 'status-not-loaded'}`;
+                }
+            }
+        }
+
+        function loadAll() {
+            links.forEach(link => {
+                if (!link.loaded) {
+                    loadLink(link.id);
+                }
+            });
+        }
+
+        function unloadAll() {
+            links.forEach(link => {
+                if (link.loaded) {
+                    unloadLink(link.id);
+                }
+            });
+        }
+
+        function toggleAllSandbox() {
+            const current = document.getElementById('globalSandbox').checked;
+            document.getElementById('globalSandbox').checked = !current;
+            renderLinks(getFilteredLinks());
+        }
+
+        function filterCategory(category) {
+            currentFilter = category;
+            
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            renderLinks(getFilteredLinks());
+        }
+
+        function getFilteredLinks() {
+            const searchTerm = document.getElementById('searchBox').value.toLowerCase();
+            
+            return links.filter(link => {
+                const matchesCategory = currentFilter === 'all' || link.category === currentFilter;
+                const matchesSearch = searchTerm === '' || 
+                                     link.name.toLowerCase().includes(searchTerm) || 
+                                     link.url.toLowerCase().includes(searchTerm);
+                return matchesCategory && matchesSearch;
+            });
+        }
+
+        function filterLinks() {
+            renderLinks(getFilteredLinks());
+        }
+
+        function updateStats() {
+            const loadedCount = links.filter(l => l.loaded).length;
+            const sandboxCount = links.filter(l => l.sandboxEnabled).length;
+            const githubCount = links.filter(l => l.category === 'github').length;
+            
+            document.getElementById('loadedLinks').textContent = loadedCount;
+            document.getElementById('sandboxEnabled').textContent = sandboxCount;
+            document.getElementById('githubLinks').textContent = githubCount;
+        }
+
+        // Event listeners for global controls
+        document.getElementById('globalSandbox').addEventListener('change', () => {
+            renderLinks(getFilteredLinks());
+        });
+
+        document.getElementById('globalAllowScripts').addEventListener('change', () => {
+            renderLinks(getFilteredLinks());
+        });
+
+        document.getElementById('globalAllowSameOrigin').addEventListener('change', () => {
+            renderLinks(getFilteredLinks());
+        });
+
+        // Initial render
+        renderLinks();
+    </script>
+</body>
+</html>
