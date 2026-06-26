@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stack Overflow - Tab 7</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f48024 0%, #fe7a16 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1400px; margin: 0 auto; }
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        h1 { font-size: 2.5em; margin-bottom: 10px; }
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .nav-tab {
+            padding: 12px 20px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        .nav-tab:hover, .nav-tab.active {
+            background: rgba(255,255,255,0.4);
+            transform: translateY(-2px);
+        }
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+        .card:hover { transform: translateY(-5px); }
+        .card h3 { color: #f48024; margin-bottom: 10px; }
+        .card p { color: #666; margin-bottom: 15px; }
+        .card a {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #f48024;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        .card a:hover { background: #d96e1b; }
+        iframe {
+            width: 100%;
+            height: 300px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 30px;
+            padding: 15px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>💬 Stack Overflow</h1>
+            <p>Where Developers Learn & Share</p>
+        </header>
+        
+        <nav class="nav-tabs">
+            <a href="index.html" class="nav-tab">🏠 Home</a>
+            <a href="tab1-github.html" class="nav-tab">🐙 GitHub</a>
+            <a href="tab2-gitlab.html" class="nav-tab">🦊 GitLab</a>
+            <a href="tab3-npm.html" class="nav-tab">📦 NPM</a>
+            <a href="tab4-pypi.html" class="nav-tab">🐍 PyPI</a>
+            <a href="tab5-docker.html" class="nav-tab">🐳 Docker</a>
+            <a href="tab6-mdn.html" class="nav-tab">📚 MDN</a>
+            <a href="tab7-stackoverflow.html" class="nav-tab active">💬 Stack Overflow</a>
+            <a href="tab8-freecodecamp.html" class="nav-tab">🎓 freeCodeCamp</a>
+            <a href="tab9-devdocs.html" class="nav-tab">📖 DevDocs</a>
+            <a href="tab10-opensource.html" class="nav-tab">🌟 Open Source</a>
+        </nav>
+
+        <div class="content-grid">
+            <div class="card">
+                <h3>Stack Overflow</h3>
+                <p>Q&A for developers</p>
+                <a href="https://stackoverflow.com" target="_blank">Visit SO</a>
+                <iframe src="https://stackoverflow.com" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
+            </div>
+            <div class="card">
+                <h3>Stack Exchange</h3>
+                <p>Network of Q&A sites</p>
+                <a href="https://stackexchange.com" target="_blank">Visit SE</a>
+                <iframe src="https://stackexchange.com" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
+            </div>
+            <div class="card">
+                <h3>Meta Stack Overflow</h3>
+                <p>Discuss the site itself</p>
+                <a href="https://meta.stackoverflow.com" target="_blank">Visit Meta</a>
+                <iframe src="https://meta.stackoverflow.com" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
+            </div>
+            <div class="card">
+                <h3>Stack Overflow Jobs</h3>
+                <p>Developer job board</p>
+                <a href="https://stackoverflow.com/jobs" target="_blank">Visit Jobs</a>
+                <iframe src="https://stackoverflow.com/jobs" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
+            </div>
+            <div class="card">
+                <h3>Stack Overflow Teams</h3>
+                <p>Private Q&A for teams</p>
+                <a href="https://stackoverflow.co/teams" target="_blank">Visit Teams</a>
+                <iframe src="https://stackoverflow.co/teams" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
+            </div>
+            <div class="card">
+                <h3>SO Documentation</h3>
+                <p>Documentation project</p>
+                <a href="https://stackoverflow.com/docs" target="_blank">Visit Docs</a>
+                <iframe src="https://stackoverflow.com/docs" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
+            </div>
+        </div>
+
+        <a href="index.html" class="back-link">← Back to Main Index (500 Links)</a>
+    </div>
+</body>
+</html>

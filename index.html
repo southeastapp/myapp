@@ -32,6 +32,34 @@
             border-radius: 15px;
             backdrop-filter: blur(10px);
         }
+
+        .tabs-nav {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 25px;
+            padding: 15px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .tab-link {
+            padding: 12px 20px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .tab-link:hover {
+            background: rgba(255,255,255,0.4);
+            transform: translateY(-2px);
+        }
         
         h1 {
             font-size: 2.5em;
@@ -231,6 +259,19 @@
             <h1>🔒 500 Link Sandbox Controller</h1>
             <p>Kontrol aman untuk 500 link open source dengan sandbox protection</p>
         </header>
+
+        <nav class="tabs-nav">
+            <a href="tab1-github.html" class="tab-link">🐙 GitHub</a>
+            <a href="tab2-gitlab.html" class="tab-link">🦊 GitLab</a>
+            <a href="tab3-npm.html" class="tab-link">📦 NPM</a>
+            <a href="tab4-pypi.html" class="tab-link">🐍 PyPI</a>
+            <a href="tab5-docker.html" class="tab-link">🐳 Docker</a>
+            <a href="tab6-mdn.html" class="tab-link">📚 MDN</a>
+            <a href="tab7-stackoverflow.html" class="tab-link">💬 Stack Overflow</a>
+            <a href="tab8-freecodecamp.html" class="tab-link">🎓 freeCodeCamp</a>
+            <a href="tab9-devdocs.html" class="tab-link">📖 DevDocs</a>
+            <a href="tab10-opensource.html" class="tab-link">🌟 Open Source</a>
+        </nav>
         
         <div class="stats">
             <div class="stat-item">
